@@ -40,9 +40,3 @@ jobs:
         run: sops -d main.enc.tfvars > main.tfvars
       - name: Apply changes
         run: terraform apply -var-file="main.tfvars" -auto-approve
-      - name: Commit changes
-        run: |
-          GITHUB_SHA_SHORT=$(git rev-parse --short HEAD)
-          git add .
-          git commit -m"Applied changes from $GITHUB_SHA_SHORT"
-          git push
