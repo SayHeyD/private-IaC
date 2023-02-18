@@ -16,4 +16,8 @@ runs:
       uses: mdgreenwald/mozilla-sops-action@v1.4.1
       with:
         version: 'v3.7.3'
+
+    - name: Initialize terraform
+      shell: bash
+      run: terraform init
       
