@@ -1,0 +1,41 @@
+name: "Terraform"
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_IAM_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_IAM_ACCESS_KEY_SECRET }}
+  SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_PRIVATE_KEY }}
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Setup
+        uses: ./.github/workflows/common/terraform-s3-setup
+      - name: "Decrypt tfvars file"
+        run: sops -d main.enc.tfvars > main.tfvars
+      - name: Plan changes
+        run: terraform plan -var-file="main.tfvars"
+
+  apply:
+    if: github.event_name == 'push'
+    environment: production infrastructure
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Setup
+        uses: ./.github/workflows/common/terraform-s3-setup
+      - name: "Decrypt tfvars file"
+        run: sops -d main.enc.tfvars > main.tfvars
+      - name: Apply changes
+        run: terraform plan -var-file="main.tfvars"

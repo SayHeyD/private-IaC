@@ -1,0 +1,19 @@
+name: "Terraform setup"
+description: "Job to install and setup terraform"
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@v3
+
+    - name: Install terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.3.9
+
+    - name: Sops Binary Installer
+      id: install-sops
+      uses: mdgreenwald/mozilla-sops-action@v1.4.1
+      with:
+        version: 'v3.7.3'
+      
