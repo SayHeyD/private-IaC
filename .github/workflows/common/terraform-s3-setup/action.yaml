@@ -6,14 +6,39 @@ runs:
   steps:
     - uses: actions/checkout@v3
 
+    - name: 'Configure git'
+      shell: bash
+      run: |
+        git config --global user.name 'GitHub Actions'
+        git config --global user.email 'action@github.com'
+
     - name: Install terraform
       uses: hashicorp/setup-terraform@v2
       with:
         terraform_version: 1.3.9
+
+    - name: Config Terraform plugin cache
+      shell: bash
+      run: |
+        echo 'plugin_cache_dir="$HOME/.terraform.d/plugin-cache"' >~/.terraformrc
+        mkdir --parents ~/.terraform.d/plugin-cache
+        
+    - name: Cache Terraform
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.terraform.d/plugin-cache
+        key: ${{ runner.os }}-terraform-${{ hashFiles('**/.terraform.lock.hcl') }}
+        restore-keys: |
+          ${{ runner.os }}-terraform-
 
     - name: Sops Binary Installer
       id: install-sops
       uses: mdgreenwald/mozilla-sops-action@v1.4.1
       with:
         version: 'v3.7.3'
+
+    - name: Initialize terraform
+      shell: bash
+      run: terraform init
       
