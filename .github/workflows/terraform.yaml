@@ -14,7 +14,18 @@ env:
   SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_PRIVATE_KEY }}
 
 jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Setup
+        uses: ./.github/workflows/common/terraform-s3-setup
+      - name: Validate
+        run: terraform validate
+
   plan:
+    needs: validate
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -39,4 +50,4 @@ jobs:
       - name: "Decrypt tfvars file"
         run: sops -d main.enc.tfvars > main.tfvars
       - name: Apply changes
-        run: terraform apply -var-file="main.tfvars" -auto-approve
+        run: terraform apply -var-file="main.tfvars" -auto-approve -input=false
