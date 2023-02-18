@@ -42,5 +42,6 @@ jobs:
       - name: Commit changes
         run: |
           GITHUB_SHA_SHORT=$(git rev-parse --short HEAD)
+          git add .
           git commit "Applied changes from $GITHUB_SHA_SHORT"
           git push
