@@ -29,6 +29,7 @@ jobs:
   apply:
     if: github.event_name == 'push'
     environment: production infrastructure
+    needs: plan
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
