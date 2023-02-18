@@ -7,7 +7,7 @@ data "sops_file" "sops_age_key" {
 }
 
 module "do_cluster" {
-  source = "github.com/SayHeyD/terraform-modules/tree/main/packages/do-cluster"
+  source = "github.com/SayHeyD/terraform-modules/packages/do-cluster"
 
   do_token = var.do_token
   cluster_name = "prod-eu-001"
