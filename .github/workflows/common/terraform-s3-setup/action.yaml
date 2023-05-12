@@ -39,7 +39,7 @@ runs:
         version: 'v3.7.3'
 
     - name: Write kubeconfig
-      if: write-kubeconfig
+      id: write-kubeconfig
       shell: bash
       run: |
         echo $KUBECONFIG_CONTENT > ./.kubeconfig
