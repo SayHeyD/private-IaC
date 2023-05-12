@@ -38,6 +38,14 @@ runs:
       with:
         version: 'v3.7.3'
 
+    - name: Write kubeconfig
+      id: write-kubeconfig
+      shell: bash
+      run: |
+        echo $KUBECONFIG_CONTENT > ./.kubeconfig
+        export KUBECONFIG=$(pwd)/.kubeconfig
+        export KUBE_CONFIG_PATH=$(pwd)/.kubeconfig
+
     - name: Initialize terraform
       shell: bash
       run: terraform init
